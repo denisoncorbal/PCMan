@@ -1,11 +1,22 @@
 import React from 'react';
+import Header from './components/header/Header';
+import HeaderContent from './components/headerContent/HeaderContent';
+import MainContent from './components/mainContent/MainContent';
+import MainMenu from './components/mainMenu/MainMenu';
+import SideContent from './components/sideContent/SideContent';
+import Footer from './components/footer/Footer';
 
 function App() {
   return (
-    <div className="App">
-      PCMan
-    </div>
-  );
+    <>
+        <Header />
+        <MainMenu />
+        <HeaderContent />
+        <MainContent />
+        <SideContent />
+        <Footer />
+    </>
+);
 }
 
 export default App;
