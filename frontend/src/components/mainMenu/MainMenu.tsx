@@ -1,23 +1,18 @@
-import React, { useContext } from 'react';
-import { pageContext } from '../../context/PageContext';
-import { StyledMainMenu } from './styles';
+import React from 'react';
+import { FaHome, FaUsers } from 'react-icons/fa'
+import { StyledMainMenu, DropdownButtonStyled } from './styles';
 
 
 const MainMenu = () => {
 
-    const context = useContext(pageContext);
-
-    const handleClick = ()=>{
-        console.log('Contexto inicial: ' + context.page)
-        context.page == 'home' ? context.setPage('memberManagement') : context.setPage('home');
-        console.log('Contexto final: ' + context.page)
-    }
-
     return (
         <StyledMainMenu>
-            <button onClick={handleClick}>
-                MemberManagement
-            </button>
+            <DropdownButtonStyled className='dropdown1' page='home' name='Home' icon={<FaHome />} />
+            <DropdownButtonStyled className='dropdown1' name='Members' icon={<FaUsers />}>
+                <DropdownButtonStyled className='dropdown2' name='Management' page='membersManagement' />
+                <DropdownButtonStyled className='dropdown2' name='Birthdays' page='membersBirthdays' />
+            </DropdownButtonStyled>
+            
         </StyledMainMenu>
     );
 };
