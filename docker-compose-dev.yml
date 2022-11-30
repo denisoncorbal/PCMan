@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  frontend:
+    container_name: frontend-container
+    restart: always
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile-dev
+    tty: true
+    ports:
+      - "3000:3000"
+
+  backend:
+    container_name: backend-container
+    restart: always
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile-dev
+    tty: true
+    ports:
+      - "8080:8080"
+
+  db:
+    container_name: db-container
+    restart: always
+    image: mysql
+    environment:
+      MYSQL_DATABASE: pcman
+      MYSQL_USER: pcman
+      MYSQL_PASSWORD: pcman
+      MYSQL_ROOT_PASSWORD: root
+    
