@@ -18,6 +18,8 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    networks:
+      - frontend-network
 
   backend:
     container_name: backend-container
@@ -40,6 +42,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - frontend-network
+      - backend-network
 
   db:
     container_name: db-container
@@ -59,3 +64,9 @@ services:
       MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
     env_file:
       - ./.env
+    networks:
+      - backend-network
+
+networks:
+  frontend-network:
+  backend-network:

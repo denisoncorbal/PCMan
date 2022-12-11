@@ -6,4 +6,4 @@ COPY . /app
 
 RUN apk --no-cache add curl
 
-CMD [ "./mvnw", "spring-boot:run", "-Dmaven.artifact.threads=1" ]
+CMD [ "./mvnw", "spring-boot:run", "--strict-checksums", "-Dmaven.artifact.threads=1" ]
