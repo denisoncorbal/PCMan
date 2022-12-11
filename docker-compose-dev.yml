@@ -1,32 +1,61 @@
 version: "3.8"
+
 services:
+
   frontend:
     container_name: frontend-container
-    restart: always
+    restart: unless-stopped
     build:
       context: ./frontend
       dockerfile: ./Dockerfile-dev
+    environment:
+      NODE_ENV: development
+    env_file:
+      - ./.env
     tty: true
     ports:
-      - "3000:3000"
+      - ${FRONTEND_EXTERNAL_PORT}:${FRONTEND_DOCKER_PORT}
+    depends_on:
+      backend:
+        condition: service_healthy
 
   backend:
     container_name: backend-container
-    restart: always
+    restart: unless-stopped
     build:
       context: ./backend
-      dockerfile: ./Dockerfile-dev
+      dockerfile: ./Dockerfile-dev    
+    env_file:
+      - ./.env
+    stdin_open: true
     tty: true
     ports:
-      - "8080:8080"
+      - ${BACKEND_EXTERNAL_PORT}:${BACKEND_DOCKER_PORT}
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     container_name: db-container
-    restart: always
-    image: mysql
+    restart: unless-stopped
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
     environment:
-      MYSQL_DATABASE: pcman
-      MYSQL_USER: pcman
-      MYSQL_PASSWORD: pcman
-      MYSQL_ROOT_PASSWORD: root
-    
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+    env_file:
+      - ./.env
